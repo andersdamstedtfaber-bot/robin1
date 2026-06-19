@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matematik Quest ⛏</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0f0f1a; display: flex; justify-content: center; padding: 16px; min-height: 100vh; }
+    .g { font-family: 'Press Start 2P', monospace; background: #1a1a2e; color: #fff; padding: 20px; width: 100%; max-width: 600px; }
+    .gtitle { text-align: center; color: #4ade80; font-size: 13px; margin-bottom: 4px; text-shadow: 2px 2px 0 #166534; }
+    .gsub { text-align: center; color: #fbbf24; font-size: 7px; margin-bottom: 14px; text-shadow: 1px 1px 0 #92400e; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 7px; }
+    .score { color: #fbbf24; } .lv { color: #60a5fa; }
+    .xpbar { background: #1e293b; border: 2px solid #334155; height: 12px; margin-bottom: 3px; }
+    .xpfill { background: #4ade80; height: 100%; transition: width .4s; }
+    .xplbl { font-size: 5px; color: #64748b; text-align: right; margin-bottom: 10px; }
+    .lvlbadge { font-size: 6px; color: #64748b; text-align: center; margin-bottom: 10px; }
+    .topics { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+    .tbtn { background: #1e293b; border: 2px solid #334155; color: #94a3b8; font-family: 'Press Start 2P', monospace; font-size: 6px; padding: 6px 8px; cursor: pointer; }
+    .tbtn.on { border-color: #4ade80; color: #4ade80; background: #0c1a0c; }
+    .tbtn:hover { border-color: #86efac; color: #86efac; }
+    .scene { background: #0f172a; border: 3px solid #334155; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+    .bubble { background: #1e293b; border: 2px solid #4ade80; padding: 8px 10px; font-size: 7px; color: #e2e8f0; flex: 1; line-height: 1.8; position: relative; }
+    .bubble::before { content: ''; position: absolute; left: -8px; top: 10px; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-right: 8px solid #4ade80; }
+    .qbox { background: #0c1a0c; border: 3px solid #4ade80; padding: 16px; margin-bottom: 12px; text-align: center; }
+    .qlbl { font-size: 6px; color: #86efac; margin-bottom: 10px; }
+    .qeq { font-size: 15px; color: #fbbf24; text-shadow: 2px 2px 0 #78350f; margin-bottom: 10px; }
+    .qask { font-size: 9px; color: #e2e8f0; margin-bottom: 4px; }
+    .qhint { font-size: 6px; color: #6b7280; margin-top: 6px; line-height: 1.7; }
+    .ansrow { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
+    .ainput { background: #1e293b; border: 3px solid #475569; color: #fff; font-family: 'Press Start 2P', monospace; font-size: 13px; padding: 10px; flex: 1; outline: none; }
+    .ainput:focus { border-color: #4ade80; }
+    .ainput::placeholder { color: #475569; font-size: 7px; }
+    .btn { border: none; color: #fff; font-family: 'Press Start 2P', monospace; font-size: 7px; padding: 11px 14px; cursor: pointer; }
+    .btnG { background: #166534; border-bottom: 4px solid #052e16; } .btnG:hover { background: #15803d; }
+    .btnH { background: #92400e; border-bottom: 4px solid #451a03; } .btnH:hover { background: #b45309; }
+    .fb { padding: 10px; margin-bottom: 10px; font-size: 7px; line-height: 2; display: none; }
+    .fb.ok { display: block; background: #052e16; border: 2px solid #4ade80; color: #86efac; }
+    .fb.no { display: block; background: #2d0000; border: 2px solid #ef4444; color: #fca5a5; }
+    .sol { display: none; background: #0f0f2e; border: 2px solid #60a5fa; padding: 14px; margin-bottom: 10px; font-size: 7px; line-height: 2.4; color: #bfdbfe; }
+    .sol.vis { display: block; }
+    .sstep { color: #93c5fd; display: block; }
+    .sstep.hl { color: #fbbf24; }
+    .boom { text-align: center; font-size: 24px; display: none; margin: 6px 0; }
+    .boom.vis { display: block; }
+    .nxtrow { display: none; margin-bottom: 12px; }
+    .nxtrow.vis { display: block; }
+    .btnNXT { display: block; width: 100%; background: #facc15; border: none; border-bottom: 5px solid #a16207; color: #1a1a00; font-family: 'Press Start 2P', monospace; font-size: 10px; padding: 16px; cursor: pointer; text-align: center; }
+    .btnNXT:hover { background: #fde047; }
+    .btnNXT:active { border-bottom: 2px solid #a16207; transform: translateY(3px); }
+    .inv { display: flex; gap: 5px; justify-content: center; margin-top: 12px; }
+    .slot { width: 40px; height: 40px; background: #374151; border: 2px solid #6b7280; border-bottom: 2px solid #4b5563; border-right: 2px solid #4b5563; display: flex; align-items: center; justify-content: center; font-size: 16px; position: relative; }
+    .slot.on { border-color: #fbbf24; }
+    .cnt { position: absolute; bottom: 1px; right: 2px; font-size: 6px; color: #fff; text-shadow: 1px 1px 0 #000; }
+  </style>
+</head>
+<body>
+<div class="g">
+  <div class="gtitle">⛏ Matematik Quest ⛏</div>
+  <div class="gsub">Løs ligninger — Red Steve fra Creeper'en!</div>
+
+  <div class="topbar">
+    <div id="hearts" style="font-size:15px;letter-spacing:2px;">♥♥♥</div>
+    <div><span class="score">💎 <span id="sc">0</span></span> &nbsp; <span class="lv">LVL <span id="lv">1</span></span></div>
+  </div>
+  <div class="xpbar"><div class="xpfill" id="xpf" style="width:0%"></div></div>
+  <div class="xplbl">XP: <span id="xpt">0/5</span></div>
+  <div class="lvlbadge" id="lvlbadge">Niveau 1 — kun positive tal</div>
+
+  <div class="topics">
+    <button class="tbtn on" id="bt-simple" onclick="setTopic('simple')">ax + b = c</button>
+    <button class="tbtn" id="bt-frac" onclick="setTopic('frac')">x/a + b = c</button>
+    <button class="tbtn" id="bt-both" onclick="setTopic('both')">x på begge sider</button>
+  </div>
+
+  <div class="scene">
+    <span id="creeper" style="font-size:30px;transition:transform .3s;">🟩</span>
+    <div class="bubble" id="bbl">Løs ligningen for at stoppe mig!</div>
+    <span style="font-size:30px;">🧑</span>
+  </div>
+
+  <div class="qbox">
+    <div class="qlbl">— OPGAVE —</div>
+    <div class="qeq" id="qeq">...</div>
+    <div class="qask">Hvad er x?</div>
+    <div class="qhint" id="qh"></div>
+  </div>
+
+  <div class="ansrow">
+    <input class="ainput" type="number" id="ai" placeholder="x = ?" step="any" inputmode="numeric">
+    <button class="btn btnG" onclick="check()">✓ SVAR</button>
+    <button class="btn btnH" onclick="hint()">? TIP</button>
+  </div>
+
+  <div class="fb" id="fb"></div>
+  <div class="boom" id="boom">💥 KA-BOOM! 💥</div>
+
+  <div class="sol" id="sol">
+    <div style="color:#60a5fa;margin-bottom:6px;">📘 SÅDAN LØSER DU DET:</div>
+    <div id="solsteps"></div>
+  </div>
+
+  <div class="nxtrow" id="nxt">
+    <button class="btnNXT" onclick="next()">▶ NÆSTE OPGAVE</button>
+  </div>
+
+  <div class="inv">
+    <div class="slot on">⚔️<span class="cnt" id="is">0</span></div>
+    <div class="slot">💎<span class="cnt" id="id">0</span></div>
+    <div class="slot">🧪<span class="cnt" id="ix">0</span></div>
+    <div class="slot">🍎<span class="cnt" id="ia">0</span></div>
+  </div>
+</div>
+
+<script>
+var S = { hearts:3, score:0, level:1, xp:0, xpN:5, topic:'simple', cur:null, hints:0, sw:0, di:0, xb:0, ap:0 };
+var BUBBLES = ['Løs det... hvis du tør! 😤','Haha! Du kan aldrig løse det! 💣','SSSSS... løs det! 💚','Matematik er dit problem nu! 🟩','Jeg eksploderer snart!'];
+function ri(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function pos(){ return S.level <= 2; }
+
+function gen(){
+  var t=S.topic, p=pos(), tries=0;
+
+  if(t==='simple'){
+    var a,b,x,c;
+    do {
+      a=ri(1, p?3:5);
+      x=p?ri(1,8):ri(-6,10);
+      b=p?ri(0,8):ri(-8,8);
+      c=a*x+b;
+      tries++;
+    } while(p && (x<0||c<0) && tries<50);
+    var aStr=a===1?'x':a+'x';
+    var bs=b===0?'':(b>0?' + '+b:' - '+Math.abs(b));
+    return {
+      eq: aStr+bs+' = '+c,
+      ans: x,
+      hint: 'Træk '+(b>=0?b:'-'+Math.abs(b))+' fra begge sider, og del derefter med '+a,
+      sol: [
+        aStr+bs+' = '+c,
+        b!==0?'Træk '+b+' fra begge sider:':null,
+        b!==0?aStr+' = '+(c-b):null,
+        a!==1?'Del begge sider med '+a+':':null,
+        'x = '+x
+      ].filter(Boolean)
+    };
+  }
+
+  if(t==='frac'){
+    var a,b,x,c;
+    do {
+      a=ri(2, p?3:5);
+      x=p?ri(1,6)*a:ri(-3,6)*a;
+      b=p?ri(0,5):ri(-5,5);
+      c=x/a+b;
+      tries++;
+    } while((p&&(x<0||c<0)) && tries<60);
+    if(!Number.isInteger(x/a)||tries>=60){ S.topic='simple'; return gen(); }
+    var bs=b===0?'':(b>0?' + '+b:' - '+Math.abs(b));
+    return {
+      eq: 'x / '+a+bs+' = '+c,
+      ans: x,
+      hint: 'Træk '+b+' fra begge sider, og gang derefter med '+a,
+      sol: [
+        'x / '+a+bs+' = '+c,
+        b!==0?'Træk '+b+' fra begge sider:':null,
+        b!==0?'x / '+a+' = '+(c-b):null,
+        'Gang begge sider med '+a+':',
+        'x = '+(c-b)+' × '+a,
+        'x = '+x
+      ].filter(Boolean)
+    };
+  }
+
+  if(t==='both'){
+    var a,b,d,x,c;
+    do {
+      a=ri(2, p?4:6);
+      d=ri(1,a-1);
+      x=p?ri(1,6):ri(-4,6);
+      b=p?ri(0,6):ri(-6,6);
+      c=(a-d)*x+b;
+      tries++;
+    } while(p && (x<0||c<0) && tries<60);
+    var bs=b===0?'':(b>0?' + '+b:' - '+Math.abs(b));
+    return {
+      eq: a+'x'+bs+' = '+d+'x + '+c,
+      ans: x,
+      hint: 'Flyt '+d+'x til venstre side ved at trække det fra begge sider',
+      sol: [
+        a+'x'+bs+' = '+d+'x + '+c,
+        'Træk '+d+'x fra begge sider:',
+        (a-d)+'x'+bs+' = '+c,
+        b!==0?'Træk '+b+' fra begge sider:':null,
+        b!==0?(a-d)+'x = '+(c-b):null,
+        'Del begge sider med '+(a-d)+':',
+        'x = '+x
+      ].filter(Boolean)
+    };
+  }
+}
+
+function lvlLabel(){
+  var l=S.level;
+  document.getElementById('lvlbadge').textContent =
+    l<=1 ? 'Niveau 1 — kun positive tal' :
+    l===2 ? 'Niveau 2 — stadig positive tal' :
+    l===3 ? 'Niveau 3 — negative tal kommer nu' :
+    'Niveau '+l+' — avancerede opgaver';
+}
+
+function ui(){
+  var h='';
+  for(var i=0;i<3;i++) h+='<span style="color:'+(i<S.hearts?'#ef4444':'#7f1d1d')+'">♥</span>';
+  document.getElementById('hearts').innerHTML=h;
+  document.getElementById('sc').textContent=S.score;
+  document.getElementById('lv').textContent=S.level;
+  document.getElementById('xpt').textContent=S.xp+'/'+S.xpN;
+  document.getElementById('xpf').style.width=Math.min(100,S.xp/S.xpN*100)+'%';
+  document.getElementById('is').textContent=S.sw;
+  document.getElementById('id').textContent=S.di;
+  document.getElementById('ix').textContent=S.xb;
+  document.getElementById('ia').textContent=S.ap;
+  lvlLabel();
+}
+
+function next(){
+  S.cur=gen(); S.hints=0;
+  document.getElementById('qeq').textContent=S.cur.eq;
+  document.getElementById('qh').textContent='';
+  document.getElementById('ai').value='';
+  document.getElementById('ai').disabled=false;
+  document.getElementById('fb').className='fb';
+  document.getElementById('sol').className='sol';
+  document.getElementById('boom').className='boom';
+  document.getElementById('nxt').className='nxtrow';
+  document.getElementById('creeper').style.transform='scale(1)';
+  document.getElementById('bbl').textContent=BUBBLES[ri(0,BUBBLES.length-1)];
+  ui();
+}
+
+function setTopic(t){
+  S.topic=t;
+  document.querySelectorAll('.tbtn').forEach(function(b){ b.classList.remove('on'); });
+  document.getElementById('bt-'+t).classList.add('on');
+  next();
+}
+
+function hint(){
+  S.hints++;
+  document.getElementById('qh').textContent='💡 TIP: '+S.cur.hint;
+}
+
+function showSol(){
+  document.getElementById('sol').className='sol vis';
+  document.getElementById('solsteps').innerHTML=S.cur.sol.map(function(s,i){
+    var last=i===S.cur.sol.length-1;
+    return '<span class="sstep'+(last?' hl':'')+'">'+( i+1)+'. '+s+'</span>';
+  }).join('');
+}
+
+function check(){
+  var v=parseFloat(document.getElementById('ai').value);
+  if(isNaN(v)) return;
+  var ok=Math.abs(v-S.cur.ans)<0.001;
+  document.getElementById('ai').disabled=true;
+  var fb=document.getElementById('fb');
+  if(ok){
+    fb.className='fb ok';
+    fb.textContent='✅ RIGTIGT! x = '+S.cur.ans+' — Creeperen er besejret!'+(S.hints>0?' (tip brugt)':' +10 XP!');
+    document.getElementById('boom').className='boom vis';
+    document.getElementById('creeper').style.transform='scale(0)';
+    document.getElementById('bbl').textContent='NOOOO! 💥';
+    S.score+=(S.hints>0?5:10); S.xp++; S.sw++;
+    if(S.hints===0) S.di++;
+    if(S.xp>=S.xpN){
+      S.xp=0; S.level++;
+      S.xpN=Math.floor(S.xpN*1.5);
+      fb.textContent+=' 🎉 LEVEL UP! Du er nu level '+S.level+'!';
+      S.ap+=2;
+    }
+  } else {
+    S.hearts--;
+    fb.className='fb no';
+    fb.textContent='❌ Forkert! Rigtigt svar: x = '+S.cur.ans+'\nSe løsningen herunder 👇';
+    document.getElementById('bbl').textContent='SSSSSS... BOOM! 💚';
+    showSol();
+    if(S.hearts<=0){
+      setTimeout(function(){
+        fb.textContent='💀 GAME OVER! Prøv igen — du lærer det! 💪';
+        S.hearts=3; S.score=0; S.level=1; S.xp=0; S.xpN=5;
+        S.sw=0; S.di=0; S.xb=0; S.ap=0; ui();
+      },2000);
+    }
+  }
+  S.xb++;
+  document.getElementById('nxt').className='nxtrow vis';
+  ui();
+}
+
+document.getElementById('ai').addEventListener('keydown',function(e){ if(e.key==='Enter') check(); });
+next();
+</script>
+</body>
+</html>
