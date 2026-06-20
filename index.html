@@ -3,70 +3,298 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matematik Quest ⛏</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <title>Matematik Quest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0f0f1a; display: flex; justify-content: center; padding: 16px; min-height: 100vh; }
-    .g { font-family: 'Press Start 2P', monospace; background: #1a1a2e; color: #fff; padding: 20px; width: 100%; max-width: 600px; }
-    .gtitle { text-align: center; color: #4ade80; font-size: 13px; margin-bottom: 4px; text-shadow: 2px 2px 0 #166534; }
-    .gsub { text-align: center; color: #fbbf24; font-size: 7px; margin-bottom: 14px; text-shadow: 1px 1px 0 #92400e; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 7px; }
-    .score { color: #fbbf24; } .lv { color: #60a5fa; }
-    .xpbar { background: #1e293b; border: 2px solid #334155; height: 12px; margin-bottom: 3px; }
-    .xpfill { background: #4ade80; height: 100%; transition: width .4s; }
-    .xplbl { font-size: 5px; color: #64748b; text-align: right; margin-bottom: 10px; }
-    .lvlbadge { font-size: 6px; color: #64748b; text-align: center; margin-bottom: 10px; }
+
+    body {
+      background: linear-gradient(160deg, #0a0a2e 0%, #1a0a3e 50%, #0a1a3e 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 12px;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .g {
+      width: 100%;
+      max-width: 560px;
+      color: #fff;
+    }
+
+    /* HEADER */
+    .gtitle {
+      font-family: 'Bangers', cursive;
+      text-align: center;
+      font-size: 36px;
+      letter-spacing: 3px;
+      color: #fff;
+      text-shadow: 0 0 20px #7c3aed, 3px 3px 0 #4c1d95;
+      margin-bottom: 2px;
+    }
+    .gsub {
+      text-align: center;
+      font-size: 11px;
+      color: #a78bfa;
+      font-weight: 700;
+      margin-bottom: 14px;
+      letter-spacing: 1px;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.07);
+      border: 2px solid rgba(124,58,237,0.5);
+      border-radius: 12px;
+      padding: 8px 14px;
+      margin-bottom: 8px;
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .hearts { color: #f43f5e; font-size: 16px; letter-spacing: 3px; }
+    .score { color: #fbbf24; }
+    .lv { color: #7c3aed; background: #ede9fe; border-radius: 6px; padding: 2px 8px; font-size: 11px; }
+
+    /* XP BAR */
+    .xpbar {
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      height: 10px;
+      margin-bottom: 3px;
+      overflow: hidden;
+      border: 1px solid rgba(124,58,237,0.4);
+    }
+    .xpfill {
+      background: linear-gradient(90deg, #7c3aed, #a855f7);
+      height: 100%;
+      border-radius: 20px;
+      transition: width .4s;
+    }
+    .xplbl { font-size: 9px; color: #a78bfa; text-align: right; margin-bottom: 6px; font-weight: 700; }
+    .lvlbadge { font-size: 9px; color: #c4b5fd; text-align: center; margin-bottom: 12px; font-weight: 700; background: rgba(124,58,237,0.2); border-radius: 8px; padding: 4px 10px; }
+
+    /* TOPIC BUTTONS */
     .topics { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
-    .tbtn { background: #1e293b; border: 2px solid #334155; color: #94a3b8; font-family: 'Press Start 2P', monospace; font-size: 6px; padding: 6px 8px; cursor: pointer; }
-    .tbtn.on { border-color: #4ade80; color: #4ade80; background: #0c1a0c; }
-    .tbtn:hover { border-color: #86efac; color: #86efac; }
-    .scene { background: #0f172a; border: 3px solid #334155; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
-    .bubble { background: #1e293b; border: 2px solid #4ade80; padding: 8px 10px; font-size: 7px; color: #e2e8f0; flex: 1; line-height: 1.8; position: relative; }
-    .bubble::before { content: ''; position: absolute; left: -8px; top: 10px; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-right: 8px solid #4ade80; }
-    .qbox { background: #0c1a0c; border: 3px solid #4ade80; padding: 16px; margin-bottom: 12px; text-align: center; }
-    .qlbl { font-size: 6px; color: #86efac; margin-bottom: 10px; }
-    .qeq { font-size: 15px; color: #fbbf24; text-shadow: 2px 2px 0 #78350f; margin-bottom: 10px; }
-    .qask { font-size: 9px; color: #e2e8f0; margin-bottom: 4px; }
-    .qhint { font-size: 11px; color: #fbbf24; margin-top: 10px; line-height: 2; }
-    .mtable { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-    .mcell { background: #1e293b; border: 2px solid #4ade80; color: #4ade80; font-size: 10px; padding: 5px 8px; min-width: 36px; text-align: center; }
-    .mcell.hit { background: #166534; border-color: #fbbf24; color: #fbbf24; }
+    .tbtn {
+      background: rgba(255,255,255,0.07);
+      border: 2px solid rgba(124,58,237,0.4);
+      color: #a78bfa;
+      font-family: 'Nunito', sans-serif;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 7px 10px;
+      cursor: pointer;
+      border-radius: 8px;
+      flex: 1;
+      text-align: center;
+    }
+    .tbtn.on { border-color: #a855f7; color: #fff; background: rgba(124,58,237,0.4); }
+    .tbtn:hover { border-color: #a855f7; color: #e9d5ff; }
+
+    /* SCENE */
+    .scene {
+      background: rgba(255,255,255,0.05);
+      border: 2px solid rgba(124,58,237,0.4);
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .bubble {
+      background: rgba(124,58,237,0.25);
+      border: 2px solid #7c3aed;
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 11px;
+      color: #e9d5ff;
+      flex: 1;
+      line-height: 1.6;
+      font-weight: 700;
+      position: relative;
+    }
+    .bubble::before {
+      content: '';
+      position: absolute;
+      left: -9px; top: 12px;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-right: 9px solid #7c3aed;
+    }
+
+    /* QUESTION BOX */
+    .qbox {
+      background: rgba(124,58,237,0.15);
+      border: 3px solid #7c3aed;
+      border-radius: 16px;
+      padding: 18px 16px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .qlbl {
+      font-size: 10px;
+      color: #a78bfa;
+      font-weight: 900;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+    .qeq {
+      font-family: 'Bangers', cursive;
+      font-size: 32px;
+      color: #fbbf24;
+      text-shadow: 2px 2px 0 #92400e, 0 0 20px #f59e0b;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+    .qask {
+      font-size: 13px;
+      color: #e9d5ff;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+    .qhint {
+      font-size: 12px;
+      color: #fbbf24;
+      margin-top: 10px;
+      line-height: 1.8;
+      font-weight: 700;
+    }
+    .mtable {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: center;
+    }
+    .mcell {
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(124,58,237,0.5);
+      color: #c4b5fd;
+      font-size: 12px;
+      font-weight: 900;
+      padding: 5px 8px;
+      min-width: 38px;
+      text-align: center;
+      border-radius: 6px;
+    }
+    .mcell.hit {
+      background: rgba(251,191,36,0.2);
+      border-color: #fbbf24;
+      color: #fbbf24;
+    }
+
+    /* ANSWER ROW */
     .ansrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-    .ainput { background: #1e293b; border: 3px solid #475569; color: #fff; font-family: 'Press Start 2P', monospace; font-size: 13px; padding: 10px; outline: none; grid-column: 1 / -1; width: 100%; }
-    .ainput:focus { border-color: #4ade80; }
-    .ainput::placeholder { color: #475569; font-size: 7px; }
-    .btn { border: none; color: #fff; font-family: 'Press Start 2P', monospace; font-size: 7px; padding: 12px 8px; cursor: pointer; width: 100%; }
-    .btnG { background: #166534; border-bottom: 4px solid #052e16; } .btnG:hover { background: #15803d; }
-    .btnH { background: #92400e; border-bottom: 4px solid #451a03; } .btnH:hover { background: #b45309; }
-    .fb { padding: 10px; margin-bottom: 10px; font-size: 7px; line-height: 2; display: none; }
-    .fb.ok { display: block; background: #052e16; border: 2px solid #4ade80; color: #86efac; }
-    .fb.no { display: block; background: #2d0000; border: 2px solid #ef4444; color: #fca5a5; }
-    .sol { display: none; background: #0f0f2e; border: 2px solid #60a5fa; padding: 14px; margin-bottom: 10px; font-size: 11px; line-height: 2.6; color: #bfdbfe; }
+    .ainput {
+      background: rgba(255,255,255,0.08);
+      border: 3px solid rgba(124,58,237,0.6);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      padding: 12px 14px;
+      outline: none;
+      grid-column: 1 / -1;
+      width: 100%;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .ainput:focus { border-color: #a855f7; background: rgba(124,58,237,0.2); }
+    .ainput::placeholder { color: rgba(167,139,250,0.5); font-size: 14px; }
+
+    .btn {
+      border: none;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      padding: 14px 8px;
+      cursor: pointer;
+      width: 100%;
+      border-radius: 10px;
+      letter-spacing: 1px;
+    }
+    .btnG {
+      background: linear-gradient(180deg, #059669, #047857);
+      border-bottom: 4px solid #022c22;
+      text-shadow: 1px 1px 0 #022c22;
+    }
+    .btnG:hover { background: linear-gradient(180deg, #10b981, #059669); }
+    .btnH {
+      background: linear-gradient(180deg, #d97706, #b45309);
+      border-bottom: 4px solid #451a03;
+      text-shadow: 1px 1px 0 #451a03;
+    }
+    .btnH:hover { background: linear-gradient(180deg, #f59e0b, #d97706); }
+
+    /* FEEDBACK */
+    .fb { padding: 12px 14px; margin-bottom: 10px; font-size: 12px; line-height: 1.8; display: none; font-weight: 700; border-radius: 12px; white-space: pre-line; }
+    .fb.ok { display: block; background: rgba(5,150,105,0.2); border: 2px solid #059669; color: #6ee7b7; }
+    .fb.no { display: block; background: rgba(239,68,68,0.15); border: 2px solid #ef4444; color: #fca5a5; }
+
+    /* SOLUTION */
+    .sol { display: none; background: rgba(30,27,75,0.8); border: 2px solid #6366f1; padding: 16px; margin-bottom: 10px; font-size: 13px; line-height: 2.4; color: #c7d2fe; border-radius: 14px; font-weight: 700; }
     .sol.vis { display: block; }
-    .sstep { color: #93c5fd; display: block; }
-    .sstep.hl { color: #fbbf24; }
-    .boom { text-align: center; font-size: 24px; display: none; margin: 6px 0; }
+    .soltitle { color: #818cf8; font-size: 11px; letter-spacing: 2px; margin-bottom: 8px; font-weight: 900; }
+    .sstep { color: #a5b4fc; display: block; }
+    .sstep.hl { color: #fbbf24; font-size: 15px; }
+
+    /* BOOM */
+    .boom { text-align: center; font-size: 28px; display: none; margin: 6px 0; }
     .boom.vis { display: block; }
+
+    /* NEXT BUTTON */
     .nxtrow { display: none; margin-bottom: 12px; }
     .nxtrow.vis { display: block; }
-    .btnNXT { display: block; width: 100%; background: #facc15; border: none; border-bottom: 5px solid #a16207; color: #1a1a00; font-family: 'Press Start 2P', monospace; font-size: 10px; padding: 16px; cursor: pointer; text-align: center; }
-    .btnNXT:hover { background: #fde047; }
-    .btnNXT:active { border-bottom: 2px solid #a16207; transform: translateY(3px); }
-    .inv { display: flex; gap: 5px; justify-content: center; margin-top: 12px; }
-    .slot { width: 40px; height: 40px; background: #374151; border: 2px solid #6b7280; border-bottom: 2px solid #4b5563; border-right: 2px solid #4b5563; display: flex; align-items: center; justify-content: center; font-size: 16px; position: relative; }
-    .slot.on { border-color: #fbbf24; }
-    .cnt { position: absolute; bottom: 1px; right: 2px; font-size: 6px; color: #fff; text-shadow: 1px 1px 0 #000; }
+    .btnNXT {
+      display: block;
+      width: 100%;
+      background: linear-gradient(180deg, #fbbf24, #f59e0b);
+      border: none;
+      border-bottom: 5px solid #92400e;
+      color: #1a1a00;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      padding: 16px;
+      cursor: pointer;
+      text-align: center;
+      border-radius: 12px;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+    }
+    .btnNXT:hover { background: linear-gradient(180deg, #fde047, #fbbf24); }
+    .btnNXT:active { border-bottom: 2px solid #92400e; transform: translateY(3px); }
+
+    /* INVENTORY */
+    .inv { display: flex; gap: 6px; justify-content: center; margin-top: 14px; }
+    .slot {
+      width: 52px; height: 52px;
+      background: rgba(255,255,255,0.07);
+      border: 2px solid rgba(124,58,237,0.5);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      position: relative;
+    }
+    .slot.on { border-color: #fbbf24; background: rgba(251,191,36,0.1); }
+    .cnt { position: absolute; bottom: 2px; right: 4px; font-size: 9px; color: #fff; font-weight: 900; text-shadow: 1px 1px 0 #000; }
   </style>
 </head>
 <body>
 <div class="g">
-  <div class="gtitle">⛏ Matematik Quest ⛏</div>
-  <div class="gsub">Løs ligninger — Red Steve fra Creeper'en!</div>
+  <div class="gtitle">MATEMATIK QUEST</div>
+  <div class="gsub">LØS LIGNINGER — OVERLEV KAMPEN!</div>
 
   <div class="topbar">
-    <div id="hearts" style="font-size:15px;letter-spacing:2px;">♥♥♥</div>
-    <div><span class="score">💎 <span id="sc">0</span></span> &nbsp; <span class="lv">LVL <span id="lv">1</span></span></div>
+    <div class="hearts" id="hearts">♥♥♥</div>
+    <div><span class="score">⭐ <span id="sc">0</span></span></div>
+    <div><span class="lv">LVL <span id="lv">1</span></span></div>
   </div>
   <div class="xpbar"><div class="xpfill" id="xpf" style="width:0%"></div></div>
   <div class="xplbl">XP: <span id="xpt">0/5</span></div>
@@ -75,13 +303,13 @@
   <div class="topics">
     <button class="tbtn on" id="bt-simple" onclick="setTopic('simple')">ax + b = c</button>
     <button class="tbtn" id="bt-frac" onclick="setTopic('frac')">x/a + b = c</button>
-    <button class="tbtn" id="bt-both" onclick="setTopic('both')">x på begge sider</button>
+    <button class="tbtn" id="bt-both" onclick="setTopic('both')">x begge sider</button>
   </div>
 
   <div class="scene">
-    <span id="creeper" style="font-size:30px;transition:transform .3s;">🟩</span>
+    <span id="creeper" style="font-size:34px;transition:transform .3s;">👾</span>
     <div class="bubble" id="bbl">Løs ligningen for at stoppe mig!</div>
-    <span style="font-size:30px;">🧑</span>
+    <span style="font-size:34px;">🧑</span>
   </div>
 
   <div class="qbox">
@@ -93,16 +321,16 @@
   </div>
 
   <div class="ansrow">
-    <input class="ainput" type="number" id="ai" placeholder="x = ?" step="any" inputmode="numeric">
+    <input class="ainput" type="number" id="ai" placeholder="Skriv x her..." step="any" inputmode="numeric">
     <button class="btn btnG" onclick="check()">✓ SVAR</button>
-    <button class="btn btnH" onclick="hint()">? TIP</button>
+    <button class="btn btnH" onclick="hint()">💡 TIP</button>
   </div>
 
   <div class="fb" id="fb"></div>
-  <div class="boom" id="boom">💥 KA-BOOM! 💥</div>
+  <div class="boom" id="boom">💥 ELIMINERET! 💥</div>
 
   <div class="sol" id="sol">
-    <div style="color:#60a5fa;margin-bottom:6px;">📘 SÅDAN LØSER DU DET:</div>
+    <div class="soltitle">📘 SÅDAN LØSER DU DET:</div>
     <div id="solsteps"></div>
   </div>
 
@@ -111,16 +339,22 @@
   </div>
 
   <div class="inv">
-    <div class="slot on">⚔️<span class="cnt" id="is">0</span></div>
-    <div class="slot">💎<span class="cnt" id="id">0</span></div>
+    <div class="slot on">🏆<span class="cnt" id="is">0</span></div>
+    <div class="slot">⭐<span class="cnt" id="id">0</span></div>
     <div class="slot">🧪<span class="cnt" id="ix">0</span></div>
-    <div class="slot">🍎<span class="cnt" id="ia">0</span></div>
+    <div class="slot">🛡️<span class="cnt" id="ia">0</span></div>
   </div>
 </div>
 
 <script>
 var S = { hearts:3, score:0, level:1, xp:0, xpN:5, topic:'simple', cur:null, hints:0, sw:0, di:0, xb:0, ap:0 };
-var BUBBLES = ['Løs det... hvis du tør! 😤','Haha! Du kan aldrig løse det! 💣','SSSSS... løs det! 💚','Matematik er dit problem nu! 🟩','Jeg eksploderer snart!'];
+var BUBBLES = [
+  'Løs det... hvis du tør! 😤',
+  'Du kan aldrig slå mig! 💣',
+  'Matematik er din fjende nu! 👾',
+  'Jeg har 99 HP tilbage! 🔥',
+  'Kun 1 tilbage i Battle Royale... det er DIG! 👊'
+];
 function ri(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
 function pos(){ return S.level <= 2; }
 
@@ -142,7 +376,7 @@ function gen(){
       eq: aStr+bs+' = '+c,
       ans: x,
       tableNum: a,
-      hint: 'Træk '+(b>=0?b:'-'+Math.abs(b))+' fra begge sider, og del derefter med '+a,
+      hint: 'Træk '+(b>=0?b:Math.abs(b))+' fra begge sider, og del med '+a,
       sol: [
         aStr+bs+' = '+c,
         b!==0?'Træk '+b+' fra begge sider:':null,
@@ -168,7 +402,7 @@ function gen(){
       eq: 'x / '+a+bs+' = '+c,
       ans: x,
       tableNum: a,
-      hint: 'Træk '+b+' fra begge sider, og gang derefter med '+a,
+      hint: 'Træk '+b+' fra begge sider, og gang med '+a,
       sol: [
         'x / '+a+bs+' = '+c,
         b!==0?'Træk '+b+' fra begge sider:':null,
@@ -195,7 +429,7 @@ function gen(){
       eq: a+'x'+bs+' = '+d+'x + '+c,
       ans: x,
       tableNum: (a-d),
-      hint: 'Flyt '+d+'x til venstre side ved at trække det fra begge sider',
+      hint: 'Flyt '+d+'x til venstre ved at trække det fra begge sider',
       sol: [
         a+'x'+bs+' = '+d+'x + '+c,
         'Træk '+d+'x fra begge sider:',
@@ -220,7 +454,7 @@ function lvlLabel(){
 
 function ui(){
   var h='';
-  for(var i=0;i<3;i++) h+='<span style="color:'+(i<S.hearts?'#ef4444':'#7f1d1d')+'">♥</span>';
+  for(var i=0;i<3;i++) h+='<span style="color:'+(i<S.hearts?'#f43f5e':'#4c1d3a')+'">♥</span>';
   document.getElementById('hearts').innerHTML=h;
   document.getElementById('sc').textContent=S.score;
   document.getElementById('lv').textContent=S.level;
@@ -265,8 +499,7 @@ function hint(){
     var html='';
     for(var i=1;i<=12;i++){
       var val=a*i;
-      var hit=(val===target);
-      html+='<div class="mcell'+(hit?' hit':'')+'">'+val+'</div>';
+      html+='<div class="mcell'+(val===target?' hit':'')+'">'+val+'</div>';
     }
     document.getElementById('mtable').innerHTML=html;
   }
@@ -288,10 +521,10 @@ function check(){
   var fb=document.getElementById('fb');
   if(ok){
     fb.className='fb ok';
-    fb.textContent='✅ RIGTIGT! x = '+S.cur.ans+' — Creeperen er besejret!'+(S.hints>0?' (tip brugt)':' +10 XP!');
+    fb.textContent='✅ RIGTIGT! x = '+S.cur.ans+' — Fjenden er elimineret!'+(S.hints>0?' (tip brugt)':' +10 XP!');
     document.getElementById('boom').className='boom vis';
     document.getElementById('creeper').style.transform='scale(0)';
-    document.getElementById('bbl').textContent='NOOOO! 💥';
+    document.getElementById('bbl').textContent='NOOOO! Du vandt! 💥';
     S.score+=(S.hints>0?5:10); S.xp++; S.sw++;
     if(S.hints===0) S.di++;
     if(S.xp>=S.xpN){
@@ -304,11 +537,11 @@ function check(){
     S.hearts--;
     fb.className='fb no';
     fb.textContent='❌ Forkert! Rigtigt svar: x = '+S.cur.ans+'\nSe løsningen herunder 👇';
-    document.getElementById('bbl').textContent='SSSSSS... BOOM! 💚';
+    document.getElementById('bbl').textContent='HAHA! Du tabte et liv! 💀';
     showSol();
     if(S.hearts<=0){
       setTimeout(function(){
-        fb.textContent='💀 GAME OVER! Prøv igen — du lærer det! 💪';
+        fb.textContent='💀 GAME OVER! Prøv igen — du kan det! 💪';
         S.hearts=3; S.score=0; S.level=1; S.xp=0; S.xpN=5;
         S.sw=0; S.di=0; S.xb=0; S.ap=0; ui();
       },2000);
