@@ -28,7 +28,10 @@
     .qlbl { font-size: 6px; color: #86efac; margin-bottom: 10px; }
     .qeq { font-size: 15px; color: #fbbf24; text-shadow: 2px 2px 0 #78350f; margin-bottom: 10px; }
     .qask { font-size: 9px; color: #e2e8f0; margin-bottom: 4px; }
-    .qhint { font-size: 6px; color: #6b7280; margin-top: 6px; line-height: 1.7; }
+    .qhint { font-size: 11px; color: #fbbf24; margin-top: 10px; line-height: 2; }
+    .mtable { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .mcell { background: #1e293b; border: 2px solid #4ade80; color: #4ade80; font-size: 10px; padding: 5px 8px; min-width: 36px; text-align: center; }
+    .mcell.hit { background: #166534; border-color: #fbbf24; color: #fbbf24; }
     .ansrow { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
     .ainput { background: #1e293b; border: 3px solid #475569; color: #fff; font-family: 'Press Start 2P', monospace; font-size: 13px; padding: 10px; flex: 1; outline: none; }
     .ainput:focus { border-color: #4ade80; }
@@ -39,7 +42,7 @@
     .fb { padding: 10px; margin-bottom: 10px; font-size: 7px; line-height: 2; display: none; }
     .fb.ok { display: block; background: #052e16; border: 2px solid #4ade80; color: #86efac; }
     .fb.no { display: block; background: #2d0000; border: 2px solid #ef4444; color: #fca5a5; }
-    .sol { display: none; background: #0f0f2e; border: 2px solid #60a5fa; padding: 14px; margin-bottom: 10px; font-size: 7px; line-height: 2.4; color: #bfdbfe; }
+    .sol { display: none; background: #0f0f2e; border: 2px solid #60a5fa; padding: 14px; margin-bottom: 10px; font-size: 11px; line-height: 2.6; color: #bfdbfe; }
     .sol.vis { display: block; }
     .sstep { color: #93c5fd; display: block; }
     .sstep.hl { color: #fbbf24; }
@@ -86,6 +89,7 @@
     <div class="qeq" id="qeq">...</div>
     <div class="qask">Hvad er x?</div>
     <div class="qhint" id="qh"></div>
+    <div class="mtable" id="mtable"></div>
   </div>
 
   <div class="ansrow">
@@ -137,6 +141,7 @@ function gen(){
     return {
       eq: aStr+bs+' = '+c,
       ans: x,
+      tableNum: a,
       hint: 'Træk '+(b>=0?b:'-'+Math.abs(b))+' fra begge sider, og del derefter med '+a,
       sol: [
         aStr+bs+' = '+c,
@@ -162,6 +167,7 @@ function gen(){
     return {
       eq: 'x / '+a+bs+' = '+c,
       ans: x,
+      tableNum: a,
       hint: 'Træk '+b+' fra begge sider, og gang derefter med '+a,
       sol: [
         'x / '+a+bs+' = '+c,
@@ -188,6 +194,7 @@ function gen(){
     return {
       eq: a+'x'+bs+' = '+d+'x + '+c,
       ans: x,
+      tableNum: (a-d),
       hint: 'Flyt '+d+'x til venstre side ved at trække det fra begge sider',
       sol: [
         a+'x'+bs+' = '+d+'x + '+c,
@@ -230,6 +237,7 @@ function next(){
   S.cur=gen(); S.hints=0;
   document.getElementById('qeq').textContent=S.cur.eq;
   document.getElementById('qh').textContent='';
+  document.getElementById('mtable').innerHTML='';
   document.getElementById('ai').value='';
   document.getElementById('ai').disabled=false;
   document.getElementById('fb').className='fb';
@@ -251,6 +259,17 @@ function setTopic(t){
 function hint(){
   S.hints++;
   document.getElementById('qh').textContent='💡 TIP: '+S.cur.hint;
+  var a=S.cur.tableNum;
+  if(a && a>1){
+    var target=S.cur.ans*a;
+    var html='';
+    for(var i=1;i<=12;i++){
+      var val=a*i;
+      var hit=(val===target);
+      html+='<div class="mcell'+(hit?' hit':'')+'">'+val+'</div>';
+    }
+    document.getElementById('mtable').innerHTML=html;
+  }
 }
 
 function showSol(){
